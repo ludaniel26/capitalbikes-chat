@@ -29,7 +29,7 @@ ui <- navbarPage(
         img(src = "CapitalBikeshareStationDockedBikes.jpg", alt = "Capital Bikeshare bikes docked at a station"),
         div(
           class = "hero__overlay",
-          h1(class = "hero__title", "Every ride DC took in 2023"),
+          h1(class = "hero__title", "Every Ride DC Took In 2023"),
           p(class = "hero__sub",
             "Find a dock, plan a route, and see how weather and season moved ",
             "3.6 million Capital Bikeshare trips across Washington.")
