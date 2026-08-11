@@ -148,7 +148,7 @@ ui <- navbarPage(
         "Plan a ride",
         paste("Choose where you are starting and where you are headed. The route follows",
               "cycling directions, and the summary shows how long it should take and how much",
-              "you will climb along the way. Route may take up to a minute to load.")
+              "you will climb along the way.")
       ),
       sidebarLayout(
         sidebarPanel(
