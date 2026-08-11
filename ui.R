@@ -259,7 +259,7 @@ ui <- navbarPage(
   # ------------------------------------------------------- AI Chat
   
   tabPanel(
-    "Ask CapRi!",
+    "Ask CapRi AI!",
     div(
       class = "container-fluid",
       page_head(
