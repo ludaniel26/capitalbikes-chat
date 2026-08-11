@@ -146,7 +146,7 @@ ui <- navbarPage(
       page_head(
         "Tab 03 / Routing",
         "Plan a ride",
-        paste("Choose origin and destination stations. The route follows",
+        paste("Select start and destination stations. The route follows",
               "cycling directions. Estimated travel time, elevation change,",
               "and turn-by-turn directions are provided.")
       ),
