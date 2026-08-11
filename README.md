@@ -4,5 +4,5 @@ Upgraded UI, added turn-by-turn routing, and added an AI chat assistant function
 
 Deployed using Posit Connect Cloud: https://ludaniel26-capitalbikes.share.connect.posit.cloud
 
-In order to properly access the Google Maps API for the Bike Station Map and Bike Router, create a local environment environment variable: Sys.setenv("MAPS_API" = "ENTER YOUR API KEY HERE")
+In order to properly access the Google Maps API for the Bike Station Map and Bike Router, create a local environment environment variable: Sys.setenv("MAPS_API" = "ENTER YOUR API KEY HERE").
 To properly access the CapRi API for the AI chat assistant, create a local environment environment variable: Sys.setenv("ANTHROPIC_API_KEY" = "ENTER YOUR API KEY HERE")
