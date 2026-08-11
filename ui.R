@@ -245,6 +245,31 @@ ui <- navbarPage(
         )
       )
     )
+  ),
+  
+  
+  # ------------------------------------------------------- AI Chat
+  
+  tabPanel(
+    "Ask CapRi!",
+    div(
+      class = "container-fluid",
+      page_head(
+        "Tab 06 / CapRi AI Assistant",
+        "Ask about the data",
+        paste("Ask a question about 2023 ride patterns, weather or station demand."
+          )
+      ),
+      div(class = "panel-card",
+          chat_ui("askdata", height = "460px",
+                  messages = list(
+                    "Ask me about 2023 ride patterns. For example: *Are rides shorter when it rains?* or *Which month had the longest average rides?*"
+                  ))
+      ),
+      div(class = "blurb__hint",
+          "CapRi is AI and can make mistakes. Please double-check responses. "
+      )
+    )
   )
 )
 

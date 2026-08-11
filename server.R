@@ -377,4 +377,42 @@ function(input, output, session) {
       )
     }
   })
+  
+  
+  # ====================================================== CapRi AI ==========
+  
+  # Rate limit: a public app with an API key needs a ceiling.
+  question_count <- reactiveVal(0)
+  MAX_QUESTIONS <- 15
+  
+  ask_chat <- reactive({
+    req(nzchar(ANTHROPIC_KEY))
+    ellmer::chat_anthropic(
+      system_prompt = ASSISTANT_PROMPT,
+      model = "claude-haiku-4-5-20251001"
+    )
+  })
+  
+  observeEvent(input$askdata_user_input, {
+    if (!nzchar(ANTHROPIC_KEY)) {
+      chat_append("askdata",
+                  "The assistant is not configured on this server (no API key set).")
+      return()
+    }
+    
+    if (question_count() >= MAX_QUESTIONS) {
+      chat_append("askdata",
+                  "That's the question limit for this session. Refresh the page to start over.")
+      return()
+    }
+    question_count(question_count() + 1)
+    
+    tryCatch({
+      stream <- ask_chat()$stream_async(input$askdata_user_input)
+      chat_append("askdata", stream)
+    }, error = function(e) {
+      chat_append("askdata",
+                  paste("The assistant could not answer just now:", conditionMessage(e)))
+    })
+  })
 }

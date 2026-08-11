@@ -15,7 +15,8 @@ library(leaflet)
 library(mapsapi)
 library(gmapsdistance)
 library(elevatr)
-
+library(ellmer)
+library(shinychat)
 
 # ---------------------------------------------------------------- credentials
 
@@ -214,3 +215,102 @@ page_head <- function(eyebrow, title, lede) {
     p(class = "pagehead__lede", lede)
   )
 }
+
+ANTHROPIC_KEY <- Sys.getenv("ANTHROPIC_API_KEY", unset = "")
+
+# Everything the assistant is allowed to know, computed once from the real data.
+build_fact_sheet <- function() {
+  w <- weather_data
+  has_rides <- "rides" %in% names(w)
+  
+  monthly <- w %>%
+    mutate(month = format(Date, "%B")) %>%
+    group_by(month) %>%
+    summarise(
+      days     = n(),
+      avg_dur  = round(mean(Duration, na.rm = TRUE), 1),
+      avg_temp = round(mean(Tempavg,  na.rm = TRUE), 1),
+      rides    = if (has_rides) sum(rides, na.rm = TRUE) else NA_real_,
+      .groups  = "drop"
+    )
+  
+  precip <- w %>%
+    mutate(cond = ifelse(is.na(Preciptype) | trimws(Preciptype) == "",
+                         "dry", Preciptype)) %>%
+    group_by(cond) %>%
+    summarise(
+      days    = n(),
+      avg_dur = round(mean(Duration, na.rm = TRUE), 1),
+      rides   = if (has_rides) round(mean(rides, na.rm = TRUE)) else NA_real_,
+      .groups = "drop"
+    )
+  
+  top_stations <- sapply(MONTHS, function(m) {
+    d <- station_freq[[m]]
+    paste0(m, ": ", d$start_station_name[1], " (",
+           format(d$n[1], big.mark = ","), " departures)")
+  })
+  
+  paste(
+    "DATASET: Capital Bikeshare, Washington DC, calendar year 2023.",
+    "Each weather row is ONE DAY (365 rows). 'Duration' is the AVERAGE ride",
+    "length in minutes for that day, not a total.",
+    "",
+    "YEAR OVERALL:",
+    sprintf("- Average ride: %.1f minutes", mean(w$Duration, na.rm = TRUE)),
+    sprintf("- Longest average day: %.1f min on %s",
+            max(w$Duration, na.rm = TRUE),
+            format(w$Date[which.max(w$Duration)], "%B %d")),
+    sprintf("- Shortest average day: %.1f min on %s",
+            min(w$Duration, na.rm = TRUE),
+            format(w$Date[which.min(w$Duration)], "%B %d")),
+    sprintf("- Correlation, temperature vs ride length: %.2f",
+            cor(w$Tempavg, w$Duration, use = "complete.obs")),
+    if (has_rides) sprintf("- Total rides in 2023: %s",
+                           format(sum(w$rides, na.rm = TRUE), big.mark = ",")),
+    if (has_rides) sprintf("- Fewest rides: %s on %s",
+                           format(min(w$rides, na.rm = TRUE), big.mark = ","),
+                           format(w$Date[which.min(w$rides)], "%B %d")),
+    "",
+    "BY MONTH:",
+    paste(apply(monthly, 1, function(r) paste0(
+      "- ", r[["month"]], ": avg ride ", r[["avg_dur"]], " min, avg temp ",
+      r[["avg_temp"]], "F",
+      if (has_rides) paste0(", ", format(as.numeric(r[["rides"]]), big.mark = ","), " rides") else ""
+    )), collapse = "\n"),
+    "",
+    "BY PRECIPITATION:",
+    paste(apply(precip, 1, function(r) paste0(
+      "- ", r[["cond"]], ": ", r[["days"]], " days, avg ride ", r[["avg_dur"]], " min",
+      if (has_rides) paste0(", avg ", r[["rides"]], " rides/day") else ""
+    )), collapse = "\n"),
+    "",
+    "BUSIEST START STATION EACH MONTH:",
+    paste("-", top_stations, collapse = "\n"),
+    "",
+    sprintf("STATIONS: %d docks. Bike counts are a live SNAPSHOT, not 2023 history.",
+            nrow(stations)),
+    sep = "\n"
+  )
+}
+
+FACT_SHEET <- build_fact_sheet()
+
+ASSISTANT_PROMPT <- paste(
+  "You answer questions about a Capital Bikeshare dataset for a public website.",
+  "",
+  "RULES:",
+  "1. Use ONLY the figures in the DATA below. Never estimate, extrapolate or",
+  "   recall numbers from your own training.",
+  "2. If the data cannot answer the question, say so plainly and name what is",
+  "   missing. Do not guess.",
+  "3. Duration is average ride LENGTH per day. Do not describe it as a count",
+  "   of rides.",
+  "4. Bike availability is a current snapshot, not 2023 history.",
+  "5. Two or three sentences. Cite the actual numbers. No preamble.",
+  "6. Correlation is not causation; describe patterns, not causes.",
+  "",
+  "DATA:",
+  FACT_SHEET,
+  sep = "\n"
+)
