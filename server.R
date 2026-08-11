@@ -26,7 +26,9 @@ function(input, output, session) {
       stat_tile("Regular bikes", s$num_bikes_available, accent = "ink"),
       stat_tile("E-bikes", s$num_ebikes_available, accent = "teal"),
       stat_tile("Total available", s$total_bikes_available,
-                sub = as.character(s$dock_band), accent = "red"),
+                sub = as.character(s$dock_band),
+                accent = c("Low" = "red", "Moderate" = "gold",
+                           "Well stocked" = "green")[[as.character(s$dock_band)]]),
       stat_tile("Coordinates",
                 sprintf("%.3f, %.3f", s$latitude, s$longitude),
                 sub = "latitude, longitude", accent = "gold")
@@ -44,7 +46,7 @@ function(input, output, session) {
                tags$span(style = "width:10px;height:10px;border-radius:50%;background:#C8A44D;display:inline-block;"),
                "6 to 15 bikes"),
       tags$div(style = "display:flex;align-items:center;gap:.5rem;",
-               tags$span(style = "width:10px;height:10px;border-radius:50%;background:#10707E;display:inline-block;"),
+               tags$span(style = "width:10px;height:10px;border-radius:50%;background:#1E7A4A;display:inline-block;"),
                "More than 15 bikes")
     )
   })
@@ -53,7 +55,7 @@ function(input, output, session) {
   # 778 markers every time the dropdown changes.
   output$stationMap <- renderLeaflet({
     pal_colour <- ifelse(stations$total_bikes_available <= 5, RED,
-                  ifelse(stations$total_bikes_available <= 15, GOLD, TEAL))
+                  ifelse(stations$total_bikes_available <= 15, GOLD, GREEN))
 
     leaflet() %>%
       addProviderTiles(providers$CartoDB.Positron, group = "Street") %>%

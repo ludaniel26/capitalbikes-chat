@@ -161,6 +161,7 @@ SLATE <- "#5A6B7B"  # secondary text
 RED   <- "#D2232A"  # Capital Bikeshare red, the one hot accent
 TEAL  <- "#10707E"  # Potomac, data secondary
 GOLD  <- "#C8A44D"  # monument gold, tertiary
+GREEN <- "#1E7A4A"  # well-stocked docks, map only
 PAPER <- "#EDF0F3"  # cool page background
 
 
@@ -183,7 +184,7 @@ theme_capital <- function() {
 
 # A stat tile. Deliberately hand-built rather than bslib::value_box so the app
 # doesn't depend on a specific bslib version.
-stat_tile <- function(label, value, sub = NULL, accent = c("ink", "red", "teal", "gold")) {
+stat_tile <- function(label, value, sub = NULL, accent = c("ink", "red", "teal", "gold", "green")) {
   accent <- match.arg(accent)
   div(
     class = paste0("tile tile--", accent),

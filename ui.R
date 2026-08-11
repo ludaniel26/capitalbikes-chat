@@ -122,7 +122,7 @@ ui <- navbarPage(
           width = 9,
           uiOutput("stationStats"),
           div(class = "panel-card",
-            div(class = "panel-card__title", "Station locations"),
+            div(class = "panel-card__title", "Search station locations by map"),
             leafletOutput("stationMap", height = "520px")
           )
         )
@@ -263,12 +263,10 @@ ui <- navbarPage(
       div(class = "panel-card",
           chat_ui("askdata", height = "460px",
                   messages = list(
-                    "Ask me about 2023 ride patterns. For example: *Are rides shorter when it rains?* or *Which month had the longest average rides?*"
+                    "Ask me about 2023 ride patterns. For example: *Are rides shorter when it rains?* or *Which month had the longest average rides?*",
+                    "CapRi is AI and can make mistakes. Please double-check responses. "
                   ))
       ),
-      div(class = "blurb__hint",
-          "CapRi is AI and can make mistakes. Please double-check responses. "
-      )
     )
   )
 )

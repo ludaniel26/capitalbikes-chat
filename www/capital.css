@@ -15,6 +15,7 @@
   --red:   #D2232A;
   --teal:  #10707E;
   --gold:  #C8A44D;
+  --green: #1E7A4A;
 
   --display: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif;
   --body:    'Public Sans', 'Helvetica Neue', Helvetica, sans-serif;
@@ -46,6 +47,9 @@ h1, h2, h3, h4, .navbar-brand {
   border: 0;
   box-shadow: 0 1px 0 rgba(255, 255, 255, .06);
   padding: .35rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 1030;
 }
 
 .navbar .navbar-brand {
@@ -193,6 +197,7 @@ h1, h2, h3, h4, .navbar-brand {
 .tile--red  { border-left-color: var(--red); }
 .tile--teal { border-left-color: var(--teal); }
 .tile--gold { border-left-color: var(--gold); }
+.tile--green { border-left-color: var(--green); }
 .tile--ink  { border-left-color: var(--ink); }
 
 .tile__label {
