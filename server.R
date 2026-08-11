@@ -112,24 +112,45 @@ function(input, output, session) {
     r <- route_result()
     if (is.null(r) || is.null(r$steps) || !nrow(r$steps)) return(NULL)
     
-    tags$details(
-      class = "panel-card",
-      tags$summary(
-        style = "cursor:pointer;font-family:var(--display);font-weight:600;font-size:.95rem;",
-        sprintf("Turn-by-turn directions (%d steps)", nrow(r$steps))
-      ),
-      tags$ol(
-        style = "margin:.9rem 0 0;padding-left:1.3rem;line-height:1.65;",
-        lapply(seq_len(nrow(r$steps)), function(i) {
-          tags$li(
-            style = "margin-bottom:.35rem;font-size:.9rem;",
-            r$steps$instruction[i],
-            if (nzchar(r$steps$distance[i]))
-              tags$span(style = "color:#5A6B7B;font-size:.85rem;",
-                        paste0("  ", r$steps$distance[i]))
-          )
-        })
+    # A small glyph per manoeuvre, read off the instruction text. Purely
+    # decorative -- anything unrecognised falls through to a neutral dot.
+    glyph <- function(txt) {
+      t <- tolower(txt)
+      if (grepl("slight left", t))        "\u2196"
+      else if (grepl("slight right", t))  "\u2197"
+      else if (grepl("sharp left|left", t))   "\u2190"
+      else if (grepl("sharp right|right", t)) "\u2192"
+      else if (grepl("continue|head|straight", t)) "\u2191"
+      else if (grepl("destination", t))   "\u25C9"
+      else "\u2022"
+    }
+    
+    steps <- lapply(seq_len(nrow(r$steps)), function(i) {
+      ins <- r$steps$instruction[i]
+      div(
+        class = "step",
+        div(class = "step__marker", glyph(ins)),
+        div(
+          class = "step__body",
+          div(class = "step__text", ins),
+          if (nzchar(r$steps$distance[i]))
+            div(class = "step__dist", r$steps$distance[i])
+        )
       )
+    })
+    
+    tags$details(
+      class = "steps",
+      open = NA,
+      tags$summary(
+        class = "steps__summary",
+        sprintf("Directions (%d steps)", nrow(r$steps))
+      ),
+      div(
+        class = "steps__from",
+        r$origin_name, " \u2192 ", r$dest_name
+      ),
+      div(class = "steps__list", steps)
     )
   })
   

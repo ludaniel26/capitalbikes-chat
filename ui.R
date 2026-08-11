@@ -8,7 +8,13 @@ ui <- navbarPage(
 
   header = tags$head(
     tags$link(rel = "stylesheet", href = "capital.css"),
-    tags$meta(name = "viewport", content = "width=device-width, initial-scale=1")
+    tags$meta(name = "viewport", content = "width=device-width, initial-scale=1"),
+    tags$script(HTML(
+      "document.addEventListener('DOMContentLoaded', function() {
+         var nav = document.querySelector('nav.navbar');
+         if (nav) nav.setAttribute('data-bs-theme', 'dark');
+       });"
+    ))
   ),
 
 
@@ -142,7 +148,7 @@ ui <- navbarPage(
         "Plan a ride",
         paste("Choose where you are starting and where you are headed. The route follows",
               "cycling directions, and the summary shows how long it should take and how much",
-              "you will climb along the way.")
+              "you will climb along the way. Route may take up to a minute to load.")
       ),
       sidebarLayout(
         sidebarPanel(
@@ -152,7 +158,9 @@ ui <- navbarPage(
           selectizeInput("destination", "Destination", choices = NULL,
                          options = list(placeholder = "Pick an end dock")),
           div(style = "margin-top:.9rem;", actionButton("route", "Plan route", class = "btn-primary")),
-          div(style = "margin-top:1rem;", uiOutput("routeMessage"))
+          div(class = "hint-text", "Route may take up to a minute to load after clicking."),
+          div(style = "margin-top:1rem;", uiOutput("routeMessage")),
+          uiOutput("routeSteps")
         ),
         mainPanel(
           width = 9,
@@ -160,8 +168,7 @@ ui <- navbarPage(
           div(class = "panel-card",
             div(class = "panel-card__title", "Route"),
             leafletOutput("map", height = "520px")
-          ),
-          uiOutput("routeSteps")
+          )
         )
       )
     )

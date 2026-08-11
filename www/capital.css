@@ -348,6 +348,13 @@ label {
   font-style: italic;
 }
 
+.hint-text {
+  margin-top: .5rem;
+  font-size: .78rem;
+  line-height: 1.4;
+  color: var(--slate);
+}
+
 /* --------------------------------------------------------------- about */
 
 .hero {
@@ -478,25 +485,128 @@ a:focus-visible,
 }
 
 
-/* ------------------------------------------------------------ collapse steps */
+/* ------------------------------------------------- turn-by-turn directions */
 
-details.panel-card summary {
+.steps {
+  margin-top: 1.1rem;
+  border-top: 1px solid var(--line);
+  padding-top: .9rem;
+}
+
+.steps__summary {
   list-style: none;
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: .68rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--slate);
   outline: none;
 }
 
-details.panel-card summary::-webkit-details-marker {
-  display: none;
-}
+.steps__summary::-webkit-details-marker { display: none; }
 
-details.panel-card summary::before {
+.steps__summary::before {
   content: "▸";
   display: inline-block;
-  margin-right: .5rem;
+  margin-right: .45rem;
   color: var(--red);
   transition: transform .15s ease;
 }
 
-details.panel-card[open] summary::before {
-  transform: rotate(90deg);
+.steps[open] .steps__summary::before { transform: rotate(90deg); }
+
+.steps__from {
+  font-size: .82rem;
+  color: var(--slate);
+  line-height: 1.45;
+  margin: .6rem 0 .2rem;
+  padding-bottom: .7rem;
+  border-bottom: 1px dashed var(--line);
+}
+
+/* Scrolls independently so a 35-step route doesn't stretch the sidebar
+   far past the map beside it. */
+.steps__list {
+  max-height: 420px;
+  overflow-y: auto;
+  padding: .8rem .2rem .2rem 0;
+  position: relative;
+}
+
+/* The connecting line -- same device as the route rule under page headings. */
+.steps__list::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: .95rem;
+  bottom: .9rem;
+  width: 2px;
+  background: var(--line);
+}
+
+.step {
+  display: flex;
+  gap: .65rem;
+  position: relative;
+  padding-bottom: .85rem;
+}
+
+.step:last-child { padding-bottom: 0; }
+
+.step__marker {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--card);
+  border: 2px solid var(--line);
+  color: var(--slate);
+  font-size: .72rem;
+  line-height: 18px;
+  text-align: center;
+  z-index: 1;
+  transition: border-color .15s ease, color .15s ease;
+}
+
+.step:first-child .step__marker,
+.step:last-child .step__marker {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.step:hover .step__marker {
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+.step__body { padding-top: .1rem; }
+
+.step__text {
+  font-size: .85rem;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+.step__dist {
+  font-family: var(--mono);
+  font-size: .7rem;
+  color: var(--slate);
+  margin-top: .15rem;
+}
+
+/* Slim scrollbar so the list doesn't get a heavy grey gutter. */
+.steps__list::-webkit-scrollbar { width: 6px; }
+.steps__list::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 3px;
+}
+.steps__list::-webkit-scrollbar-thumb:hover { background: var(--slate); }
+
+/* The collapsed-menu icon is an SVG painted via this variable, not a
+   font/border colour. Default is near-black, invisible on the ink navbar. */
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255,0.9)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
 }
