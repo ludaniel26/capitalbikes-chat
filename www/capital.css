@@ -1,0 +1,473 @@
+/* Capital Bikes -- visual identity
+   Direction: Washington DC transit diagram. Cool civic paper, ink navbar,
+   Capital Bikeshare red reserved as the single hot accent, and a route-line
+   motif (dot--bar--dot) used as the rule under every page heading.
+   Body face is Public Sans, the typeface of the US Web Design System. */
+
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap');
+
+:root {
+  --ink:   #0E1620;
+  --slate: #5A6B7B;
+  --line:  #DCE2E8;
+  --paper: #EDF0F3;
+  --card:  #FFFFFF;
+  --red:   #D2232A;
+  --teal:  #10707E;
+  --gold:  #C8A44D;
+
+  --display: 'Archivo', 'Helvetica Neue', Helvetica, sans-serif;
+  --body:    'Public Sans', 'Helvetica Neue', Helvetica, sans-serif;
+  --mono:    'IBM Plex Mono', ui-monospace, monospace;
+
+  --radius: 10px;
+  --shadow: 0 1px 2px rgba(14, 22, 32, .06), 0 8px 24px rgba(14, 22, 32, .05);
+}
+
+/* ---------------------------------------------------------------- base */
+
+body {
+  background: var(--paper);
+  font-family: var(--body);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, .navbar-brand {
+  font-family: var(--display);
+  letter-spacing: -0.01em;
+}
+
+/* ------------------------------------------------------------- navbar */
+
+.navbar.navbar-default,
+.navbar {
+  background: var(--ink) !important;
+  border: 0;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .06);
+  padding: .35rem 0;
+}
+
+.navbar .navbar-brand {
+  color: #fff !important;
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: .01em;
+  padding-left: .25rem;
+}
+
+/* The brand gets a small red dock marker, echoing a station on a map. */
+.navbar .navbar-brand::before {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: .55rem;
+  border-radius: 50%;
+  background: var(--red);
+  vertical-align: baseline;
+}
+
+.navbar .nav-link,
+.navbar .navbar-nav > li > a {
+  color: rgba(255, 255, 255, .68) !important;
+  font-weight: 500;
+  font-size: .93rem;
+  padding: .6rem .9rem !important;
+  border-radius: 6px;
+  transition: color .15s ease, background .15s ease;
+}
+
+.navbar .nav-link:hover,
+.navbar .navbar-nav > li > a:hover {
+  color: #fff !important;
+  background: rgba(255, 255, 255, .07);
+}
+
+/* Active tab carries the route line -- the same device as the page rules. */
+.navbar .nav-link.active,
+.navbar .navbar-nav > .active > a,
+.navbar .navbar-nav > li.active > a {
+  color: #fff !important;
+  background: transparent !important;
+  position: relative;
+}
+
+.navbar .nav-link.active::after,
+.navbar .navbar-nav > .active > a::after,
+.navbar .navbar-nav > li.active > a::after {
+  content: "";
+  position: absolute;
+  left: .9rem;
+  right: .9rem;
+  bottom: .15rem;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--red);
+}
+
+/* -------------------------------------------------------- page heading */
+
+.container-fluid > .row,
+.tab-content {
+  padding-top: .25rem;
+}
+
+.pagehead {
+  margin: 1.9rem 0 1.4rem;
+}
+
+.pagehead__eyebrow {
+  font-family: var(--mono);
+  font-size: .7rem;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: .45rem;
+}
+
+.pagehead__title {
+  font-size: 2.05rem;
+  font-weight: 700;
+  margin: 0 0 .7rem;
+  line-height: 1.1;
+}
+
+.pagehead__lede {
+  max-width: 62ch;
+  color: var(--slate);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: .85rem 0 0;
+}
+
+/* --------------------------------------------- signature: the route line */
+
+.routeline {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 10px;
+}
+
+.routeline__bar {
+  height: 3px;
+  width: 46px;
+  background: var(--ink);
+  opacity: .22;
+}
+
+.routeline__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 2.5px solid var(--ink);
+  background: var(--card);
+  opacity: .35;
+  flex: none;
+}
+
+.routeline__dot--mid {
+  border-color: var(--red);
+  background: var(--red);
+  opacity: 1;
+}
+
+/* -------------------------------------------------------------- tiles */
+
+.tilerow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: .75rem;
+  margin-bottom: 1.25rem;
+}
+
+.tile {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--slate);
+  border-radius: var(--radius);
+  padding: .8rem .95rem;
+}
+
+.tile--red  { border-left-color: var(--red); }
+.tile--teal { border-left-color: var(--teal); }
+.tile--gold { border-left-color: var(--gold); }
+.tile--ink  { border-left-color: var(--ink); }
+
+.tile__label {
+  font-family: var(--mono);
+  font-size: .66rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--slate);
+  margin-bottom: .3rem;
+}
+
+.tile__value {
+  font-family: var(--display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.tile__sub {
+  font-size: .8rem;
+  color: var(--slate);
+  margin-top: .15rem;
+}
+
+/* -------------------------------------------------------------- cards */
+
+.panel-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.2rem;
+  margin-bottom: 1.1rem;
+  box-shadow: var(--shadow);
+}
+
+.panel-card__title {
+  font-family: var(--display);
+  font-size: .95rem;
+  font-weight: 600;
+  margin: 0 0 .85rem;
+  padding-bottom: .6rem;
+  border-bottom: 1px solid var(--line);
+}
+
+/* The sidebar reads as a control panel, distinct from content cards. */
+.well, .sidebar, .card.bslib-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: none;
+}
+
+/* ------------------------------------------------------------- inputs */
+
+.control-label,
+label {
+  font-family: var(--mono);
+  font-size: .68rem !important;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--slate);
+  font-weight: 500;
+  margin-bottom: .35rem;
+}
+
+.form-control, .form-select, .selectize-input {
+  border-radius: 7px;
+  border-color: var(--line);
+  font-family: var(--body);
+  font-size: .93rem;
+}
+
+.form-control:focus, .form-select:focus, .selectize-input.focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(16, 112, 126, .16);
+}
+
+.btn-default, .btn-primary, .action-button {
+  background: var(--ink);
+  border: 0;
+  color: #fff;
+  border-radius: 7px;
+  font-family: var(--body);
+  font-weight: 600;
+  font-size: .9rem;
+  padding: .5rem 1.1rem;
+  transition: background .15s ease, transform .15s ease;
+}
+
+.btn-default:hover, .btn-primary:hover, .action-button:hover {
+  background: var(--red);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.btn-default:focus-visible, .action-button:focus-visible {
+  outline: 3px solid rgba(16, 112, 126, .4);
+  outline-offset: 2px;
+}
+
+.irs--shiny .irs-bar,
+.irs--shiny .irs-single,
+.irs--shiny .irs-from,
+.irs--shiny .irs-to {
+  background: var(--teal);
+  border-color: var(--teal);
+}
+
+.irs--shiny .irs-handle {
+  border: 2px solid var(--teal);
+}
+
+/* ------------------------------------------------------- station notes */
+
+.blurb {
+  font-size: .93rem;
+  line-height: 1.62;
+  color: var(--ink);
+}
+
+.blurb__name {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: .4rem;
+}
+
+.blurb__hint {
+  color: var(--slate);
+  font-size: .88rem;
+  line-height: 1.55;
+}
+
+.blurb__list {
+  margin: .5rem 0 0;
+  padding-left: 1.05rem;
+}
+
+.blurb__list li {
+  margin-bottom: .22rem;
+  font-size: .87rem;
+}
+
+.blurb__empty {
+  color: var(--slate);
+  font-size: .89rem;
+  font-style: italic;
+}
+
+/* --------------------------------------------------------------- about */
+
+.hero {
+  border-radius: var(--radius);
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 1.4rem;
+  background: var(--ink);
+}
+
+.hero img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  display: block;
+  opacity: .55;
+}
+
+.hero__overlay {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 1.6rem 1.7rem;
+  background: linear-gradient(to top, rgba(14, 22, 32, .92), rgba(14, 22, 32, 0));
+}
+
+.hero__title {
+  color: #fff;
+  font-family: var(--display);
+  font-size: 2.3rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.05;
+}
+
+.hero__sub {
+  color: rgba(255, 255, 255, .82);
+  font-size: 1rem;
+  margin: .5rem 0 0;
+  max-width: 54ch;
+}
+
+.feature {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.05rem 1.15rem;
+  height: 100%;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.feature:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.feature__tag {
+  font-family: var(--mono);
+  font-size: .66rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: .4rem;
+}
+
+.feature__name {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.02rem;
+  margin: 0 0 .35rem;
+}
+
+.feature__body {
+  color: var(--slate);
+  font-size: .89rem;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.colophon {
+  color: var(--slate);
+  font-size: .87rem;
+  line-height: 1.65;
+}
+
+.colophon strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.colophon a {
+  color: var(--teal);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ------------------------------------------------------------- notices */
+
+.notice {
+  background: #FDF2F2;
+  border: 1px solid #F3C9CB;
+  border-left: 3px solid var(--red);
+  border-radius: var(--radius);
+  padding: .8rem .95rem;
+  font-size: .89rem;
+  color: #7A1418;
+}
+
+/* ------------------------------------------------------------ a11y etc */
+
+a:focus-visible,
+.nav-link:focus-visible,
+.form-control:focus-visible {
+  outline: 3px solid rgba(16, 112, 126, .45);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .pagehead__title { font-size: 1.6rem; }
+  .hero img { height: 210px; }
+  .hero__title { font-size: 1.5rem; }
+}
