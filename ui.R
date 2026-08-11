@@ -146,9 +146,9 @@ ui <- navbarPage(
       page_head(
         "Tab 03 / Routing",
         "Plan a ride",
-        paste("Choose where you are starting and where you are headed. The route follows",
-              "cycling directions, and the summary shows how long it should take and how much",
-              "you will climb along the way.")
+        paste("Choose origin and destination stations. The route follows",
+              "cycling directions. Estimated travel time, elevation change,",
+              "and turn-by-turn directions are provided.")
       ),
       sidebarLayout(
         sidebarPanel(
