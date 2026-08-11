@@ -160,7 +160,8 @@ ui <- navbarPage(
           div(class = "panel-card",
             div(class = "panel-card__title", "Route"),
             leafletOutput("map", height = "520px")
-          )
+          ),
+          uiOutput("routeSteps")
         )
       )
     )

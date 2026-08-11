@@ -108,6 +108,31 @@ function(input, output, session) {
     div(class = "notice", msg)
   })
 
+  output$routeSteps <- renderUI({
+    r <- route_result()
+    if (is.null(r) || is.null(r$steps) || !nrow(r$steps)) return(NULL)
+    
+    tags$details(
+      class = "panel-card",
+      tags$summary(
+        style = "cursor:pointer;font-family:var(--display);font-weight:600;font-size:.95rem;",
+        sprintf("Turn-by-turn directions (%d steps)", nrow(r$steps))
+      ),
+      tags$ol(
+        style = "margin:.9rem 0 0;padding-left:1.3rem;line-height:1.65;",
+        lapply(seq_len(nrow(r$steps)), function(i) {
+          tags$li(
+            style = "margin-bottom:.35rem;font-size:.9rem;",
+            r$steps$instruction[i],
+            if (nzchar(r$steps$distance[i]))
+              tags$span(style = "color:#5A6B7B;font-size:.85rem;",
+                        paste0("  ", r$steps$distance[i]))
+          )
+        })
+      )
+    )
+  })
+  
   output$routeStats <- renderUI({
     r <- route_result()
     if (is.null(r)) return(NULL)
@@ -163,6 +188,31 @@ function(input, output, session) {
 
       route <- mp_get_routes(directions)
 
+      # The step-by-step text is in the same XML response the route came from,
+      # so this costs no extra API call. Google embeds <b> and <div> tags in the
+      # instructions, hence the gsub. Wrapped separately because the XML layout
+      # is not contractual -- if it changes, the route still works and the
+      # directions list simply doesn't appear.
+      steps_df <- tryCatch({
+        nodes <- xml2::xml_find_all(directions, "//step")
+        if (!length(nodes)) NULL else {
+          txt <- xml2::xml_text(xml2::xml_find_first(nodes, ".//html_instructions"))
+          txt <- gsub("<div[^>]*>", " - ", txt)   # Google's sub-notes
+          txt <- gsub("<[^>]+>", "", txt)         # remaining markup
+          txt <- gsub("&nbsp;", " ", txt, fixed = TRUE)
+          txt <- trimws(gsub("\\s+", " ", txt))
+          
+          dist <- xml2::xml_text(xml2::xml_find_first(nodes, ".//distance/text"))
+          
+          keep <- !is.na(txt) & nzchar(txt)
+          if (!any(keep)) NULL else data.frame(
+            instruction = txt[keep],
+            distance    = ifelse(is.na(dist[keep]), "", dist[keep]),
+            stringsAsFactors = FALSE
+          )
+        }
+      }, error = function(e) NULL)
+      
       timing <- gmapsdistance(
         origin      = paste(origin$latitude, origin$longitude, sep = ","),
         destination = paste(destination$latitude, destination$longitude, sep = ","),
@@ -188,6 +238,7 @@ function(input, output, session) {
 
       list(
         route       = route,
+        steps       = steps_df,
         time        = pretty_time,
         elevation   = sprintf("%+.0f ft", change),
         elev_raw    = change,
